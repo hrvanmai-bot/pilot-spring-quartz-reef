@@ -1,0 +1,1 @@
+import{a as e,t}from"./useNavigate-DrqvhG58.js";import{n}from"./use-current-user-C4dygdOb.js";var r=e();function i(){let{user:e,isPending:i}=n();return i?(0,r.jsx)(`div`,{className:`grid min-h-screen place-items-center bg-bg text-muted`,children:`Đang tải...`}):(0,r.jsx)(t,{to:e?`/dashboard`:`/login`})}export{i as component};

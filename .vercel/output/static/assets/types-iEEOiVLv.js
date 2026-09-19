@@ -1,0 +1,1 @@
+var e={NOT_STARTED:`Chưa thực hiện`,IN_PROGRESS:`Đang thực hiện`,COMPLETED:`Hoàn thành`},t={XAY_DUNG:`Xây dựng`,DIEN:`Điện`,NUOC:`Nước`,SON:`Sơn`,NOI_THAT:`Nội thất`,KHAC:`Khác`};export{t as n,e as t};

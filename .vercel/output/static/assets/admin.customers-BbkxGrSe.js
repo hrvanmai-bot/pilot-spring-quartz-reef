@@ -1,0 +1,1 @@
+import{a as e}from"./useNavigate-DrqvhG58.js";import{t}from"./RequireAuth-ALBaN40c.js";import{t as n}from"./PeopleAdmin-BOotGVBV.js";var r=e();function i(){return(0,r.jsx)(t,{children:(0,r.jsx)(n,{kind:`CUSTOMER`,title:`Quản lý Khách hàng`})})}export{i as component};

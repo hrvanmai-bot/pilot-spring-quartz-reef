@@ -1,0 +1,1 @@
+import{a as e}from"./useNavigate-DrqvhG58.js";var t=e();function n({title:e,sub:n}){return(0,t.jsxs)(`div`,{className:`rounded-xl border border-dashed border-border px-6 py-12 text-center`,children:[(0,t.jsx)(`p`,{className:`font-medium text-fg`,children:e}),n?(0,t.jsx)(`p`,{className:`mt-1 text-sm text-muted`,children:n}):null]})}export{n as t};

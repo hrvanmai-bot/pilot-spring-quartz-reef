@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8080/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "HUY HOÀNG BUILD",
+      "hasCanvas": false,
+      "bodyTextLen": 237,
+      "bodyTextHash": "2175cc4b77c934f9335f4052d3f5864ab77833d771fde833355a7c773dbbc998",
+      "bodyTextPrefix": "HUY HOÀNG XÂY DỰNG · ĐẦU TƯ · THƯƠNG MẠI Hệ thống quản lý công t",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "HUY HOÀNG BUILD",
+      "hasCanvas": false,
+      "bodyTextLen": 237,
+      "bodyTextHash": "2175cc4b77c934f9335f4052d3f5864ab77833d771fde833355a7c773dbbc998",
+      "bodyTextPrefix": "HUY HOÀNG XÂY DỰNG · ĐẦU TƯ · THƯƠNG MẠI Hệ thống quản lý công t",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-preview.json"
+}
