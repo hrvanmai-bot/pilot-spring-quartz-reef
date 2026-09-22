@@ -3,7 +3,7 @@ import { AuthProvider } from "@/lib/auth/provider";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
 import appCss from "../styles.css?url";
 
-const APP_NAME = "HUY HOÀNG BUILD";
+const APP_NAME = "HUY HOÀNG · Xây dựng · Đầu tư · Thương mại";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -15,17 +15,17 @@ export const Route = createRootRoute({
         name: "description",
         content: "Hệ thống quản lý công trình — HUY HOÀNG Xây dựng • Đầu tư • Thương mại",
       },
-      { name: "theme-color", content: "#0B1C2C" },
+      { name: "theme-color", content: "#07131c" },
     ],
     links: [
       { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
       { rel: "stylesheet", href: appCss },
       { rel: "manifest", href: "/__grok/manifest.webmanifest" },
-      { rel: "apple-touch-icon", href: "/__grok/icon-180.png" },
+      { rel: "apple-touch-icon", href: "/huy-hoang-logo.png" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap",
       },
     ],
   }),

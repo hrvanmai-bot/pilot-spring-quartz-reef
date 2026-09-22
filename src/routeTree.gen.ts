@@ -16,6 +16,7 @@ import { Route as JournalsRouteImport } from './routes/journals'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as ProjectsRouteImport } from './routes/projects'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as UpdateRouteImport } from './routes/update'
 import { Route as AdminAuditRouteImport } from './routes/admin.audit'
 import { Route as AdminCustomersRouteImport } from './routes/admin.customers'
@@ -58,6 +59,11 @@ const NotificationsRoute = NotificationsRouteImport.update({
 const ProjectsRoute = ProjectsRouteImport.update({
   id: '/projects',
   path: '/projects',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
 const UpdateRoute = UpdateRouteImport.update({
@@ -109,6 +115,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
   '/projects': typeof ProjectsRouteWithChildren
+  '/settings': typeof SettingsRoute
   '/update': typeof UpdateRoute
   '/admin/audit': typeof AdminAuditRoute
   '/admin/customers': typeof AdminCustomersRoute
@@ -126,6 +133,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
   '/projects': typeof ProjectsRouteWithChildren
+  '/settings': typeof SettingsRoute
   '/update': typeof UpdateRoute
   '/admin/audit': typeof AdminAuditRoute
   '/admin/customers': typeof AdminCustomersRoute
@@ -144,6 +152,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
   '/projects': typeof ProjectsRouteWithChildren
+  '/settings': typeof SettingsRoute
   '/update': typeof UpdateRoute
   '/admin/audit': typeof AdminAuditRoute
   '/admin/customers': typeof AdminCustomersRoute
@@ -163,6 +172,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/notifications'
     | '/projects'
+    | '/settings'
     | '/update'
     | '/admin/audit'
     | '/admin/customers'
@@ -180,6 +190,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/notifications'
     | '/projects'
+    | '/settings'
     | '/update'
     | '/admin/audit'
     | '/admin/customers'
@@ -197,6 +208,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/notifications'
     | '/projects'
+    | '/settings'
     | '/update'
     | '/admin/audit'
     | '/admin/customers'
@@ -215,6 +227,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   NotificationsRoute: typeof NotificationsRoute
   ProjectsRoute: typeof ProjectsRouteWithChildren
+  SettingsRoute: typeof SettingsRoute
   UpdateRoute: typeof UpdateRoute
   AdminAuditRoute: typeof AdminAuditRoute
   AdminCustomersRoute: typeof AdminCustomersRoute
@@ -272,6 +285,13 @@ declare module '@tanstack/react-router' {
       path: '/projects'
       fullPath: '/projects'
       preLoaderRoute: typeof ProjectsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/update': {
@@ -365,6 +385,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   NotificationsRoute: NotificationsRoute,
   ProjectsRoute: ProjectsRouteWithChildren,
+  SettingsRoute: SettingsRoute,
   UpdateRoute: UpdateRoute,
   AdminAuditRoute: AdminAuditRoute,
   AdminCustomersRoute: AdminCustomersRoute,

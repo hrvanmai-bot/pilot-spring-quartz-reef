@@ -121,21 +121,26 @@ function Projects() {
               key={p.id}
               to="/projects/$id"
               params={{ id: String(p.id) }}
-              className="block rounded-xl border border-border bg-surface p-4 md:p-5"
+              className="block overflow-hidden rounded-xl border border-border bg-surface"
             >
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <h3 className="truncate font-semibold">{p.name}</h3>
-                  <p className="text-xs text-muted">
-                    {p.code}
-                    {p.customer_name ? ` · ${p.customer_name}` : ""}
-                  </p>
-                  <p className="mt-1 truncate text-sm text-muted">{p.address}</p>
+              {p.cover_image_url ? (
+                <img src={p.cover_image_url} alt="" className="h-36 w-full object-cover" />
+              ) : null}
+              <div className="p-4 md:p-5">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <h3 className="truncate font-semibold">{p.name}</h3>
+                    <p className="text-xs text-muted">
+                      {p.code}
+                      {p.customer_name ? ` · ${p.customer_name}` : ""}
+                    </p>
+                    <p className="mt-1 truncate text-sm text-muted">{p.address}</p>
+                  </div>
+                  <StatusBadge status={p.status} />
                 </div>
-                <StatusBadge status={p.status} />
-              </div>
-              <div className="mt-3">
-                <ProgressBar value={p.progress} />
+                <div className="mt-3">
+                  <ProgressBar value={p.progress} />
+                </div>
               </div>
             </Link>
           ))}

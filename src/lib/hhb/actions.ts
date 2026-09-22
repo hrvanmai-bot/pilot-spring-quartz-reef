@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { hashPassword } from "better-auth/crypto";
 import { authMiddleware } from "@/lib/auth/middleware";
+import { getSessionUser } from "@/lib/auth/verify.server";
 import { getSql } from "@/lib/db";
 import type {
   AuditRow,
@@ -105,20 +106,21 @@ export const getMyProfile = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     const sql = await getSql();
     let profile = await getProfile(sql, context.userId);
-    if (!profile) {
-      const count = await sql<{ n: number }>`select count(*)::int as n from profiles`;
-      if ((count[0]?.n ?? 0) === 0) {
-        const { getSessionUser } = await import("@/lib/auth/verify.server");
-        const u = await getSessionUser();
-        const name = u?.email?.split("@")[0] || "Giám đốc";
-        const phone = `000${Date.now().toString().slice(-7)}`;
-        await sql`
-          insert into profiles (user_id, full_name, phone, account_type, permission_level, job_title, is_active)
-          values (${context.userId}, ${name}, ${phone}, 'STAFF', 'DIRECTOR', 'Giám đốc', true)
-        `;
-        profile = await getProfile(sql, context.userId);
-      }
-    }
+  if (!profile) {
+  const count = await sql<{ n: number }>`select count(*)::int as n from profiles`;
+  const u = await getSessionUser();
+  const sessionEmail = u?.email ?? "";
+  const isDefaultDirector = sessionEmail.startsWith("0944437238@");
+  if ((count[0]?.n ?? 0) === 0 || isDefaultDirector) {
+  const phone = isDefaultDirector ? "0944437238" : `000${Date.now().toString().slice(-7)}`;
+  await sql`
+  insert into profiles (user_id, full_name, phone, account_type, permission_level, job_title, is_active)
+  values (${context.userId}, ${isDefaultDirector ? "Từ Huy Tú" : sessionEmail.split("@")[0] || "Giám đốc"}, ${phone}, 'STAFF', 'DIRECTOR', 'Giám đốc', true)
+  on conflict (user_id) do nothing
+  `;
+  profile = await getProfile(sql, context.userId);
+  }
+  }
     return { profile };
   });
 
@@ -157,7 +159,7 @@ export const getDashboard = createServerFn({ method: "GET" })
                p.address, p.project_type, p.start_date::text as start_date,
                p.expected_end_date::text as expected_end_date,
                p.actual_end_date::text as actual_end_date,
-               p.progress, p.status, p.description,
+               p.progress, p.status, p.description, p.cover_image_url,
                p.created_at::text as created_at, p.updated_at::text as updated_at
         from projects p
         join customers c on c.id = p.customer_id
@@ -239,7 +241,7 @@ export const listProjects = createServerFn({ method: "GET" })
                p.address, p.project_type, p.start_date::text as start_date,
                p.expected_end_date::text as expected_end_date,
                p.actual_end_date::text as actual_end_date,
-               p.progress, p.status, p.description,
+               p.progress, p.status, p.description, p.cover_image_url,
                p.created_at::text as created_at, p.updated_at::text as updated_at
         from projects p
         join customers c on c.id = p.customer_id
@@ -252,7 +254,7 @@ export const listProjects = createServerFn({ method: "GET" })
              p.address, p.project_type, p.start_date::text as start_date,
              p.expected_end_date::text as expected_end_date,
              p.actual_end_date::text as actual_end_date,
-             p.progress, p.status, p.description,
+             p.progress, p.status, p.description, p.cover_image_url,
              p.created_at::text as created_at, p.updated_at::text as updated_at
       from projects p
       join customers c on c.id = p.customer_id
@@ -277,7 +279,7 @@ export const getProjectDetail = createServerFn({ method: "GET" })
              p.address, p.project_type, p.start_date::text as start_date,
              p.expected_end_date::text as expected_end_date,
              p.actual_end_date::text as actual_end_date,
-             p.progress, p.status, p.description,
+             p.progress, p.status, p.description, p.cover_image_url,
              p.created_at::text as created_at, p.updated_at::text as updated_at
       from projects p
       join customers c on c.id = p.customer_id
@@ -528,6 +530,22 @@ export const updateItemStatus = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+export const setProjectCover = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .validator(z.object({ projectId: z.number(), dataUrl: z.string().min(20).max(1_500_000) }))
+  .handler(async ({ context, data }) => {
+    const sql = await getSql();
+    const profile = await requireProfile(sql, context.userId);
+    if (!isStaff(profile)) throw new Error("Khách hàng không đổi ảnh đại diện");
+    if (!data.dataUrl.startsWith("data:image/")) throw new Error("File ảnh không hợp lệ");
+    if (!(await canSeeProject(sql, profile, data.projectId))) throw new Error("Không có quyền");
+    await sql`
+      update projects set cover_image_url = ${data.dataUrl}, updated_at = now() where id = ${data.projectId}
+    `;
+    await audit(sql, context.userId, "SET_COVER", "project", data.projectId);
+    return { ok: true };
+  });
+
 export const createJournal = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
   .validator(
@@ -564,7 +582,12 @@ export const createJournal = createServerFn({ method: "POST" })
         values (${data.projectId}, ${img}, ${context.userId}, true)
       `;
     }
-    await sql`update projects set updated_at = now() where id = ${data.projectId}`;
+    await sql`
+      update projects
+      set updated_at = now(),
+          cover_image_url = coalesce(cover_image_url, ${data.images.find((x) => x.startsWith("data:image/")) ?? null})
+      where id = ${data.projectId}
+    `;
     await audit(sql, context.userId, "CREATE_JOURNAL", "journal", jid, null, {
       projectId: data.projectId,
       images: i,

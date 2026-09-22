@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Camera } from "lucide-react";
+import { AlertTriangle, Camera, Clock } from "lucide-react";
 import { useEffect, useState } from "react";
 import { RequireAuth } from "@/components/RequireAuth";
 import { EmptyState } from "@/components/EmptyState";
@@ -37,6 +37,10 @@ function Dashboard() {
   const customer = p.account_type === "CUSTOMER";
   const first = p.full_name.split(" ").slice(-1)[0];
 
+  const stale = data.stats?.stale ?? [];
+  const needAttention = stale.filter((s) => s.days >= 2);
+  const nearDone = stale.filter((s) => s.days < 2);
+
   return (
     <div className="mx-auto max-w-5xl px-4 py-6 md:px-8">
       <h1 className="font-display text-3xl">Xin chào, {first}</h1>
@@ -50,27 +54,88 @@ function Dashboard() {
             <Stat title="Khách hàng" value={data.stats.customers} />
             <Stat title="Nhân sự" value={data.stats.staff} />
           </div>
-          {data.stats.stale.length > 0 ? (
-            <section className="mt-8">
-              <h2 className="mb-3 text-lg font-semibold">Cần chú ý</h2>
-              <div className="space-y-2">
-                {data.stats.stale
-                  .filter((s) => s.days >= 3)
-                  .map((s) => (
-                    <Link
-                      key={s.id}
-                      to="/projects/$id"
-                      params={{ id: String(s.id) }}
-                      className="block rounded-xl border border-border bg-surface px-4 py-3"
-                    >
-                      <p className="font-medium">{s.name}</p>
-                      <p className="text-sm text-muted">{s.days} ngày chưa có nhật ký</p>
-                    </Link>
-                  ))}
+
+          <section className="mt-8">
+            <h2 className="mb-3 flex items-center gap-2 text-lg font-semibold">
+              <AlertTriangle className="size-5 text-accent" />
+              Cần chú ý
+            </h2>
+            {needAttention.length === 0 ? (
+              <div className="rounded-xl border border-dashed border-border px-4 py-6 text-center text-sm text-muted">
+                Tất cả công trình đang thi công đều có cập nhật gần đây.
               </div>
-            </section>
-          ) : null}
-          <JournalList items={data.journals} />
+            ) : (
+              <div className="space-y-2">
+                {needAttention.map((s) => (
+                  <Link
+                    key={s.id}
+                    to="/projects/$id"
+                    params={{ id: String(s.id) }}
+                    className="flex items-center justify-between gap-3 rounded-xl border border-border bg-surface px-4 py-3"
+                  >
+                    <div>
+                      <p className="font-medium">{s.name}</p>
+                      <p className="text-sm text-muted">Lâu chưa cập nhật nhật ký</p>
+                    </div>
+                    <span className="shrink-0 rounded-full bg-accent/15 px-2.5 py-1 text-xs font-semibold text-accent">
+                      {s.days} ngày
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </section>
+
+          <section className="mt-8">
+            <h2 className="mb-3 flex items-center gap-2 text-lg font-semibold">
+              <Clock className="size-5 text-muted" />
+              Hoạt động gần đây
+            </h2>
+            {data.journals.length === 0 ? (
+              <EmptyState title="Chưa có hoạt động" sub="Khi nhân viên ghi nhật ký, sẽ hiện tại đây." />
+            ) : (
+              <div className="space-y-2">
+                {data.journals.map((j) => (
+                  <Link
+                    key={j.id}
+                    to="/projects/$id"
+                    params={{ id: String(j.project_id) }}
+                    className="block rounded-xl border border-border bg-surface p-4"
+                  >
+                    <p className="text-sm">
+                      <span className="font-medium text-accent">{j.author_name}</span>
+                      <span className="text-muted"> vừa cập nhật </span>
+                      <span className="font-medium">{j.project_name}</span>
+                    </p>
+                    <p className="mt-1 line-clamp-2 text-sm text-muted">{j.content}</p>
+                    <p className="mt-2 text-xs text-subtle">{formatDate(j.created_at)}</p>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </section>
+
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link
+              to="/projects"
+              className="rounded-lg border border-border px-4 py-2.5 text-sm font-medium text-muted hover:border-accent hover:text-accent"
+            >
+              Tất cả công trình
+            </Link>
+            <Link
+              to="/admin/projects/new"
+              className="rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-accent-fg"
+            >
+              + Tạo công trình
+            </Link>
+            <Link
+              to="/settings"
+              search={{ tab: "staff" }}
+              className="rounded-lg border border-border px-4 py-2.5 text-sm font-medium text-muted"
+            >
+              Cài đặt
+            </Link>
+          </div>
         </>
       ) : null}
 

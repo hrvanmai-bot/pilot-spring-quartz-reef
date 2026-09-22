@@ -29,6 +29,7 @@ export type Project = {
   progress: number;
   status: ProjectStatus;
   description: string | null;
+  cover_image_url: string | null;
   created_at: string;
   updated_at: string;
 };

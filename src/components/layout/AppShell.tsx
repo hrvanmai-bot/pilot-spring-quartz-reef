@@ -2,13 +2,11 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import {
   Bell,
   Building2,
-  ClipboardList,
   Home,
   LogOut,
   NotebookPen,
   Settings,
   UserRound,
-  Users,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { UserButton } from "@/lib/auth/gates";
@@ -48,13 +46,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     { href: "/projects", label: "Công trình", icon: Building2 },
     { href: "/journals", label: "Nhật ký", icon: NotebookPen },
     { href: "/notifications", label: "Thông báo", icon: Bell },
-    ...(director
-      ? [
-          { href: "/admin/staff", label: "Nhân sự", icon: Users },
-          { href: "/admin/customers", label: "Khách hàng", icon: UserRound },
-          { href: "/admin/audit", label: "Nhật ký hệ thống", icon: ClipboardList },
-        ]
-      : []),
+    ...(director ? [{ href: "/settings", label: "Cài đặt", icon: Settings }] : []),
   ];
 
   const bottom = director
@@ -63,7 +55,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         { href: "/projects", label: "Công trình", icon: Building2 },
         { href: "/journals", label: "Hoạt động", icon: NotebookPen },
         { href: "/notifications", label: "Thông báo", icon: Bell },
-        { href: "/admin/staff", label: "Cài đặt", icon: Settings },
+        { href: "/settings", label: "Cài đặt", icon: Settings },
       ]
     : staff
       ? [
@@ -83,10 +75,18 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex min-h-screen bg-bg text-fg">
-      <aside className="sticky top-0 hidden h-screen w-60 shrink-0 flex-col border-r border-border bg-bg lg:flex">
-        <div className="border-b border-border px-5 py-6">
-          <p className="font-display text-2xl font-semibold tracking-wide">HUY HOÀNG</p>
-          <p className="mt-0.5 text-[10px] tracking-[0.22em] text-accent">BUILD</p>
+      <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r border-border bg-bg lg:flex">
+        <div className="border-b border-border px-4 py-4">
+          <div className="flex items-center gap-3">
+            <div className="shrink-0 rounded-md bg-plate p-1.5">
+              <img src="/huy-hoang-logo.png" alt="" className="size-11 object-contain" />
+            </div>
+            <div className="min-w-0">
+              <p className="font-display text-lg font-semibold uppercase tracking-wide">Huy Hoàng</p>
+              <p className="text-[9px] font-semibold tracking-[0.14em] text-accent">Xây dựng tương lai</p>
+            </div>
+          </div>
+          <p className="mt-3 text-[10px] leading-4 text-subtle">MST 4101617237 · Hotline 094.443.7238</p>
         </div>
         <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
           {side.map((l) => {
@@ -97,7 +97,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 key={l.href}
                 to={l.href}
                 className={cn(
-                  "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors",
+                  "flex items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-colors",
                   active ? "bg-accent/15 font-medium text-accent" : "text-muted hover:bg-surface hover:text-fg",
                 )}
               >

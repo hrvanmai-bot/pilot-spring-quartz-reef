@@ -1,7 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="HUY HOÀNG BUILD">
-  <rect width="32" height="32" rx="6" fill="#0B1C2C"/>
-  <polygon fill="#C9A84C" points="16,4 5,13 27,13"/>
-  <rect x="8" y="13" width="5" height="14" fill="#C9A84C"/>
-  <rect x="19" y="13" width="5" height="14" fill="#C9A84C"/>
-  <rect x="8" y="18" width="16" height="4" fill="#C9A84C"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="12" fill="#1A5F8F"/>
+  <path fill="#7EB8DC" d="M18 50V22l10 8v20z"/>
+  <path fill="#ffffff" d="M28 50V18l10 7v25z"/>
+  <path fill="#4FA3D1" d="M38 50V14l8 6v30z"/>
 </svg>

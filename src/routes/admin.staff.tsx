@@ -1,13 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { PeopleAdmin } from "@/components/PeopleAdmin";
-import { RequireAuth } from "@/components/RequireAuth";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/admin/staff")({ component: Page });
-
-function Page() {
-  return (
-    <RequireAuth>
-      <PeopleAdmin kind="STAFF" title="Quản lý Nhân sự" />
-    </RequireAuth>
-  );
-}
+export const Route = createFileRoute("/admin/staff")({
+  beforeLoad: () => {
+    throw redirect({ to: "/settings", search: { tab: "staff" } });
+  },
+  component: () => null,
+});
