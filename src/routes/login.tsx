@@ -14,6 +14,7 @@ type Mode = "STAFF" | "CUSTOMER" | null;
 const DIRECTOR_PHONE = "0944437238";
 const DIRECTOR_PASSWORD = "04022022";
 
+/** Login corporate 2 cột — logo HUY HOÀNG (force rebuild Vercel 2026-09-22) */
 function Login() {
   const { user, isPending } = useCurrentUserState();
   const nav = useNavigate();
