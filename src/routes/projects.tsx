@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useChildMatches } from "@tanstack/react-router";
 import { Plus } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { EmptyState } from "@/components/EmptyState";
@@ -13,12 +13,21 @@ export const Route = createFileRoute("/projects")({ component: Page });
 function Page() {
   return (
     <RequireAuth>
-      <Projects />
+      <ProjectsLayout />
     </RequireAuth>
   );
 }
 
-function Projects() {
+/** /projects/$id là route con — phải render <Outlet />, không thì bấm vào vẫn đứng ở list. */
+function ProjectsLayout() {
+  const childMatches = useChildMatches();
+  if (childMatches.length > 0) {
+    return <Outlet />;
+  }
+  return <ProjectsList />;
+}
+
+function ProjectsList() {
   const [projects, setProjects] = useState<Project[] | null>(null);
   const [director, setDirector] = useState(false);
   const [q, setQ] = useState("");
@@ -121,7 +130,7 @@ function Projects() {
               key={p.id}
               to="/projects/$id"
               params={{ id: String(p.id) }}
-              className="block overflow-hidden rounded-xl border border-border bg-surface"
+              className="block overflow-hidden rounded-xl border border-border bg-surface transition hover:border-accent/50"
             >
               {p.cover_image_url ? (
                 <img src={p.cover_image_url} alt="" className="h-36 w-full object-cover" />
